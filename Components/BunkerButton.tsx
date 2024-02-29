@@ -22,11 +22,7 @@ export default function BunkerButton() {
   const enterBunker = useCallback(async () => {
     setIsLoading(true);
 
-    if (!contracts || !contracts.TST404) {
-      console.error('Contract not found');
-      setIsLoading(false);
-      return;
-    }
+
 
     try {
       const txResponse = await contracts.TST404().enterBunker();
