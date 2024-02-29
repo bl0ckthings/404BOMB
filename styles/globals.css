@@ -14,7 +14,9 @@ a {
 * {
   box-sizing: border-box;
 }
-
+.span {
+  font-weight: bold
+}
 @import url('https://fonts.googleapis.com/css2?family=Revalia&display=swap');
   @font-face {
     font-family: 'Ticking Bomb';
@@ -23,3 +25,4 @@ a {
 
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap')
  
+  

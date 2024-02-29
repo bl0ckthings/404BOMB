@@ -17,6 +17,7 @@ import {
 } from 'wagmi/chains';
 import { getDefaultConfig, RainbowKitProvider, darkTheme, midnightTheme, lightTheme } from '@rainbow-me/rainbowkit';
 import { ChakraProvider, extendTheme} from '@chakra-ui/react'
+import { WagmiContractsProvider } from '../utils/ContractsProvider';
 
 
 const config = getDefaultConfig({
@@ -90,7 +91,9 @@ const theme = extendTheme({ colors, styles, breakpoints, fonts });
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider config={config}>
-        <QueryClientProvider client={client}>
+      <QueryClientProvider client={client}>
+ <WagmiContractsProvider>
+
         <RainbowKitProvider  modalSize='compact' locale='en-US' theme={darkTheme({
           accentColor: '#7b3fe4',
           accentColorForeground: 'white',
@@ -100,9 +103,14 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ChakraProvider theme={theme}>
             <Component {...pageProps} />
           </ChakraProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
+        </RainbowKitProvider>  
+         </WagmiContractsProvider>
+           </QueryClientProvider>
+    
 
+  
+     
+        
     </WagmiProvider>
   );
 }

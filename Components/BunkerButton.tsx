@@ -6,12 +6,12 @@ import { usePublicClient, useAccount } from 'wagmi';
 
 
 
-
-export default function DefuseButton() {
+export default function BunkerButton() {
 
   const contracts = useContracts();
   const [isLoading, setIsLoading] = useState(false);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  
 
  
 
@@ -19,7 +19,7 @@ export default function DefuseButton() {
 
 
   
-  const defuse = useCallback(async () => {
+  const enterBunker = useCallback(async () => {
     setIsLoading(true);
 
     if (!contracts || !contracts.TST404) {
@@ -29,13 +29,12 @@ export default function DefuseButton() {
     }
 
     try {
-      const txResponse = await contracts.TST404().defuse();
+      const txResponse = await contracts.TST404().enterBunker();
       
       if (txResponse && typeof txResponse[0] === 'string') {
         // Assuming the first element of txResponse is the transaction hash
         const transactionHash = txResponse[0];
-        setTxHash(transactionHash);
-         // Set the transaction hash
+        setTxHash(transactionHash); // Set the transaction hash
         console.log('Transaction sent:', transactionHash);
     } else {
         throw new Error('Transaction response is undefined or missing hash.');
@@ -67,9 +66,8 @@ export default function DefuseButton() {
     if (isSuccess && txReceipt) {
 
       console.log('Transaction mined:', txReceipt);
-     
-      toast.success('Successfully defused! You’re safe.');
     
+      toast.success('You made it in the bunker.');
       setIsLoading(false); // Adjust based on your transaction flow
       setTxHash(undefined)
     }
@@ -80,18 +78,16 @@ export default function DefuseButton() {
     setIsLoading(isTxLoading);
   }, [isTxLoading]);
   
-  
 
-  const handleDefuseClick = () => {
-    defuse();
-    
+  const hanldeEntreBunkerClick = () => {
+    enterBunker();
   };
 
   return (
     <div >
       
-        <button onClick={handleDefuseClick} disabled={isLoading} >
-      {isLoading ? 'Defusing...' : 'Defuse'}
+      <button onClick={hanldeEntreBunkerClick} disabled={isLoading} >
+      {isLoading ? 'Entering bunker...' : 'Enter Bunker'}
     </button>
     </div>
   

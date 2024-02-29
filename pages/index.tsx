@@ -4,6 +4,9 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Header from '../Components/Header';
 import Hero from '../Components/Hero';
+import { Toaster } from "react-hot-toast";
+import { TimerProvider } from '../Components/TimerContext';
+
 
 
 const Home: NextPage = () => {
@@ -16,11 +19,28 @@ const Home: NextPage = () => {
           name="description"
         />
         <link href="/favicon.ico" rel="icon" />
+        <audio >
+  <source src="../public/assets/TickSound.mp3" type="audio/mp3" />
+  Your browser does not support the audio element.
+</audio>
       </Head>
 
- 
-     <Hero />
-     
+  
+
+         <Hero />
+    
+  
+     <Toaster
+        toastOptions={{
+          className: '',
+          style: {
+            background: 'linear-gradient(0deg, #1A2B68, #323095)',
+            border: '1px solid white',
+            
+            color: 'white',
+           width: 'fit-content'
+          },
+        }} />
        
     </div>
   );

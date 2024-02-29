@@ -19,7 +19,130 @@ import btnBuy from '../assets/buy.png';
 import bgBottom from '../assets/background-bottom.png';
 import bgTimer from '../assets/bgTimer.png'
 import vectorImg from '../assets/header-vector.png'
+
+import DefuseButton from './DefuseButton';
+import BunkerButton from './BunkerButton';
+import { startTimerSafeHouse } from '../utils/TimerSafeHouse';
+import { startTimer } from '../utils/Timer';
+import { formatEther } from 'ethers';
+import {  useAccount } from 'wagmi'
+import { useContracts } from '../utils/ContractsProvider';
+
+
+
 const Hero = () => {
+   
+   
+    const [isSafe, setIsSafe] = useState(true);
+    const [remainingTimeinBunker, setNewTimerBunker] = useState<string>('');
+    const [remainingTime, setNewTimer] = useState<string>('');
+    const [balance, setBalance] = useState<number>(0);
+    const [isInBunker, setisInBunker] = useState(false);
+    
+
+    const contracts = useContracts();
+
+    const { address: account, isConnected, connector } = useAccount()
+
+    useEffect(() => {
+        const fetchBalance = async () => {
+          if (!account || !contracts.TST404) return;
+        
+          if (account !== undefined) {
+            const balance = await contracts.TST404().balanceOf(account);
+        
+            const userBalance = formatEther(balance).toString();
+            setBalance(Number(userBalance));
+          }
+        };
+        fetchBalance();
+      },[account, contracts])
+
+      useEffect(() => {
+        const checkIsInBunker = async () => {
+          try {
+            if (account !== undefined) {
+              const isInBunkerResult = await contracts.TST404().inBunker(account);
+            
+              setisInBunker(isInBunkerResult);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        checkIsInBunker()
+      },[account, contracts]);
+      
+      const SetTimer = async (account: string | undefined, contracts: any) => {
+        if (account !== undefined) {
+            const data = await contracts.TST404().getSecondsLeft(account);
+            const timestamp = data.toString();
+            const intervalId = startTimer(timestamp, (remainingTime: string) => {
+                setNewTimer(remainingTime);
+            });
+
+            return () => clearInterval(intervalId);
+        }
+    };
+
+    // Call SetTimer function within useEffect
+    useEffect(() => {
+        SetTimer(account, contracts); // Assuming account and contracts are defined
+    }, [account, contracts]); 
+  
+      useEffect(() => {
+        const SetTimerBunker = async () => {
+            if (account !== undefined) {
+
+          const data = await contracts.TST404().nextExplosionOf(account);
+          const timestamp = data.toString();
+          const intervalId = startTimerSafeHouse(timestamp, (remainingTimeinBunker: string) => {
+            setNewTimerBunker(remainingTimeinBunker);
+          });
+    
+          return () => clearInterval(intervalId);
+        }
+        };
+    
+        SetTimerBunker();
+      }, [account, contracts]);
+  
+  
+      useEffect(() => {
+        setIsSafe(remainingTime !== '00:00:00');
+      }, [remainingTime])
+
+      useEffect(() => {
+        let tickingAudio;
+        if (typeof window !== "undefined") {
+            tickingAudio = new Audio('/TickSound.mp3');
+        }
+
+        // Function to start playing ticking sound
+        const playTickingSound = () => {
+            if (remainingTime !== '00:00:00' && remainingTime !== '') {
+                tickingAudio.play()
+                    .catch(error => console.error("Audio play failed", error));
+                // Loop the ticking sound
+                tickingAudio.loop = true;
+            } else {
+                // Stop the ticking sound when the timer reaches 00:00:00
+                tickingAudio.pause();
+                tickingAudio.currentTime = 0; // Rewind the sound
+            }
+        };
+
+        // Call the playTickingSound function whenever remainingTime changes
+        playTickingSound();
+
+        // Cleanup function to stop the sound when the component unmounts
+        return () => {
+            if (tickingAudio) {
+                tickingAudio.pause();
+                tickingAudio.currentTime = 0;
+            }
+        };
+    }, [remainingTime]);
 
 
 return (
@@ -62,16 +185,27 @@ overflow={'visible'}
       </Flex>
 <Flex justify={'space-around'} alignItems={'center'}  >
     <Flex mt={'120px'} flexDir={'column'} padding={'20px'}  gap={'20px'}>
-    <Text
+        { !isSafe && !isInBunker && (
+                <Text
 fontFamily={'Ticking Bomb'}
 color= '#EB1B23'
 fontSize='70px'
 >YOU ARE REKT</Text>
+        )}
+         { isSafe && !isInBunker && (
+                <Text
+fontFamily={'Ticking Bomb'}
+color= '#05FD03'
+fontSize='70px'
+>YOU ARE SAFE</Text>
+        )}
+
+
 <Text
 fontFamily={'Ticking Bomb'}
 color= 'primary.text'
 fontSize='30px'>
-    Your Balance : <span>8432 BOMB</span>
+    Your Balance : <span className='span'>{balance}</span> $404BOMB
 </Text>
 <Flex  padding={'20px'} gap={'30px'} alignItems={'center'}>
         <Box bgImage={defuseImg.src}
@@ -81,10 +215,13 @@ fontSize='30px'>
         textAlign={'center'}
         cursor={'pointer'}>
         
-             <Button variant={'unstyled'}
+             <Box 
               color={'white'}
                fontFamily={'Ticking Bomb'}
-               fontSize={'30px'} fontWeight={'bold'}>DEFUSE</Button>
+               fontSize={'30px'} fontWeight={'bold'}>
+                <DefuseButton SetTimer={SetTimer}/>
+               </Box>
+               
         </Box>
        
         <Box bgImage={bunkerImg.src}
@@ -96,11 +233,11 @@ fontSize='30px'>
            }
            cursor={'pointer'}
            >
-             <Button variant="unstyled "
+             <Box 
               color={'white'}
                fontFamily={'Ticking Bomb'}
                fontSize={'30px'} fontWeight={'bold'}
-               >ENTER BUNKER</Button>
+               ><BunkerButton/></Box>
         </Box>
 
     </Flex>
@@ -111,7 +248,25 @@ fontSize='30px'>
     padding={'20px'}
     bgRepeat={'no-repeat'}
     bgSize={'cover'}>
-         <Text color='#EB1B23' fontFamily={'Ticking Bomb'} fontSize={'80px'} >11 : 59 : 50</Text>
+        {isSafe && !isInBunker && (
+        <Text color='#EB1B23' fontFamily={'Ticking Bomb'} fontSize={'30px'} >
+            TIME BEFORE EXPLOSION :
+        </Text>
+        )}
+         {isInBunker && (
+        <Text color='#EB1B23' fontFamily={'Ticking Bomb'} fontSize={'30px'} >
+            TIME LEFT IN BUNKER :
+        </Text>
+        )}
+        {isSafe && !isInBunker && (
+         <Text color='#EB1B23' fontFamily={'Ticking Bomb'} fontSize={'80px'} >{remainingTime}</Text>
+        )}
+         {isInBunker && (
+         <Text color='#EB1B23' fontFamily={'Ticking Bomb'} fontSize={'80px'} >{remainingTimeinBunker}</Text>
+        )}
+         {!isSafe  && !isInBunker && (
+         <Text color='#EB1B23' fontFamily={'Ticking Bomb'} fontSize={'80px'} >{remainingTime}</Text>
+        )}
     </Box>
        
      
@@ -163,7 +318,7 @@ gap={'30px'}
 
     </Box>
     
-    <Flex  padding={'20px'} gap={'20px'} alignItems={'flex-end'}>
+    <Flex  padding={'20px'} gap={'20px'} alignItems={'flex-end'} mt={'30px'} mr={'40px'}>
         <Box bgImage={btnBuy.src}
         bgRepeat={'no-repeat'}
         bgSize={'cover'}
