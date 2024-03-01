@@ -2,7 +2,7 @@ import { initUseWagmiContracts, processTypechainAbis } from "@type_of/use-wagmi-
 import * as typechain from '../protocol/typechain-types';
 
 const abiMap = processTypechainAbis(typechain, {
-    TST404: '0xE4855B974c59d10384eF4400ac8ffF55C283143a'
+    TST404: "0xE4855B974c59d10384eF4400ac8ffF55C283143a"
 });
 
 

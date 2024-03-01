@@ -3,7 +3,7 @@ import { useContracts } from '../utils/ContractsProvider';
 import toast from 'react-hot-toast';
 import { useWaitForTransactionReceipt } from 'wagmi'; // Ensure you're importing hooks from wagmi
 import { usePublicClient, useAccount } from 'wagmi';
-
+import {TST404} from '../protocol/typechain-types/Asterix.sol/TST404';
 
 
 export default function BunkerButton() {
