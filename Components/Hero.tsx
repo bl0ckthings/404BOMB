@@ -46,10 +46,10 @@ const Hero = () => {
 
     useEffect(() => {
         const fetchBalance = async () => {
-          if (!account || !contracts.TST404) return;
+          if (!account || !(contracts as any).TST404) return;
         
           if (account !== undefined) {
-            const balance = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').balanceOf(account);
+            const balance = await (contracts as any).TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').balanceOf(account);
         
             const userBalance = formatEther(balance).toString();
             setBalance(Number(userBalance));
@@ -62,7 +62,7 @@ const Hero = () => {
         const checkIsInBunker = async () => {
           try {
             if (account !== undefined) {
-              const isInBunkerResult = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').inBunker(account);
+              const isInBunkerResult = await (contracts as any).TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').inBunker(account);
             
               setisInBunker(isInBunkerResult);
             }
