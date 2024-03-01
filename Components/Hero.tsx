@@ -94,7 +94,7 @@ const Hero = () => {
         const SetTimerBunker = async () => {
             if (account !== undefined) {
 
-          const data = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').nextExplosionOf(account);
+          const data = await (contracts as any).TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').nextExplosionOf(account);
           const timestamp = data.toString();
           const intervalId = startTimerSafeHouse(timestamp, (remainingTimeinBunker: string) => {
             setNewTimerBunker(remainingTimeinBunker);
