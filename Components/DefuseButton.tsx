@@ -29,14 +29,14 @@ export default function DefuseButton() {
     // }
 
     try {
-      const contractHandlers = contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b');
+      const contractHandlers = (contracts as any).TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b');
       const txResponse = await contractHandlers.defuse();
       
       if (txResponse && typeof txResponse[0] === 'string') {
         // Assuming the first element of txResponse is the transaction hash
         const transactionHash = txResponse[0];
-        setTxHash(transactionHash);
-         // Set the transaction hash
+        setTxHash(transactionHash as `0x${string}`);
+        // Set the transaction hash
         console.log('Transaction sent:', transactionHash);
     } else {
         throw new Error('Transaction response is undefined or missing hash.');
