@@ -100,10 +100,10 @@ contract TST404 is DN404, OwnableRoles {
     /*-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»*/
 
     function _transfer(address from, address to, uint256 amount) internal override {
-    require(!hasExploded(from) || immune[from], "Arbomb: sender exploded");
-    require(!hasExploded(to) || immune[to], "Arbomb: recipient exploded");
-    require(!inBunker(from), "Arbomb: sender in bunker");
-    require(!inBunker(to), "Arbomb: recipient in bunker");
+    require(!hasExploded(from) || immune[from], "404Bomb: sender exploded");
+    require(!hasExploded(to) || immune[to], "404Bomb: recipient exploded");
+    require(!inBunker(from), "404Bomb: sender in bunker");
+    require(!inBunker(to), "404Bomb: recipient in bunker");
 
        
          // if sender is emptying his wallet, reset their explosion timestamp because he has no more bombs
@@ -169,19 +169,19 @@ contract TST404 is DN404, OwnableRoles {
     /*-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»-»*/
 
     function defuse() public {
-        require(balanceOf(msg.sender) > 0, "Arbomb: you have no bombs");
-        require(!hasExploded(msg.sender), "Arbomb: too late, you already exploded");
-        require(!immune[msg.sender], "Arbomb: you're immune");
+        require(balanceOf(msg.sender) > 0, "404Bomb: you have no bombs");
+        require(!hasExploded(msg.sender), "404Bomb: too late, you already exploded");
+        require(!immune[msg.sender], "404Bomb: you're immune");
 
         _nextExplosionTimestamp[msg.sender] = block.timestamp + TICK;
   }
 
 
   function enterBunker() public {
-    require(balanceOf(msg.sender) > 0, "Arbomb: you have no bombs");
-    require(!hasExploded(msg.sender), "Arbomb: too late, you already exploded");
-    require(!inBunker(msg.sender), "Arbomb: you're already in bunker");
-    require(!immune[msg.sender], "Arbomb: you're immune");
+    require(balanceOf(msg.sender) > 0, "404Bomb: you have no bombs");
+    require(!hasExploded(msg.sender), "404Bomb: too late, you already exploded");
+    require(!inBunker(msg.sender), "404Bomb: you're already in bunker");
+    require(!immune[msg.sender], "404Bomb: you're immune");
 
     _inBunkerUntilTimestamp[msg.sender] = block.timestamp + BUNKER_DURATION;
     _nextExplosionTimestamp[msg.sender] = 0;

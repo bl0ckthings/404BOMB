@@ -29,7 +29,7 @@ export default function DefuseButton() {
     // }
 
     try {
-      const contractHandlers = contracts.TST404();
+      const contractHandlers = contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b');
       const txResponse = await contractHandlers.defuse();
       
       if (txResponse && typeof txResponse[0] === 'string') {

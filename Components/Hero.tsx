@@ -49,7 +49,7 @@ const Hero = () => {
           if (!account || !contracts.TST404) return;
         
           if (account !== undefined) {
-            const balance = await contracts.TST404().balanceOf(account);
+            const balance = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').balanceOf(account);
         
             const userBalance = formatEther(balance).toString();
             setBalance(Number(userBalance));
@@ -62,7 +62,7 @@ const Hero = () => {
         const checkIsInBunker = async () => {
           try {
             if (account !== undefined) {
-              const isInBunkerResult = await contracts.TST404().inBunker(account);
+              const isInBunkerResult = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').inBunker(account);
             
               setisInBunker(isInBunkerResult);
             }
@@ -75,7 +75,7 @@ const Hero = () => {
       
       const SetTimer = async (account: string | undefined, contracts: any) => {
         if (account !== undefined) {
-            const data = await contracts.TST404().getSecondsLeft(account);
+            const data = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').getSecondsLeft(account);
             const timestamp = data.toString();
             const intervalId = startTimer(timestamp, (remainingTime: string) => {
                 setNewTimer(remainingTime);
@@ -94,7 +94,7 @@ const Hero = () => {
         const SetTimerBunker = async () => {
             if (account !== undefined) {
 
-          const data = await contracts.TST404().nextExplosionOf(account);
+          const data = await contracts.TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').nextExplosionOf(account);
           const timestamp = data.toString();
           const intervalId = startTimerSafeHouse(timestamp, (remainingTimeinBunker: string) => {
             setNewTimerBunker(remainingTimeinBunker);
