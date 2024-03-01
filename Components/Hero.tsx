@@ -24,7 +24,7 @@ import DefuseButton from './DefuseButton';
 import BunkerButton from './BunkerButton';
 import { startTimerSafeHouse } from '../utils/TimerSafeHouse';
 import { startTimer } from '../utils/Timer';
-import { formatEther } from 'ethers';
+import { ethers } from 'ethers';
 import {  useAccount } from 'wagmi'
 import { useContracts } from '../utils/ContractsProvider';
 
@@ -51,7 +51,7 @@ const Hero = () => {
           if (account !== undefined) {
             const balance = await (contracts as any).TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b').balanceOf(account);
         
-            const userBalance = formatEther(balance).toString();
+            const userBalance = ethers.utils.formatEther(balance);
             setBalance(Number(userBalance));
           }
         };

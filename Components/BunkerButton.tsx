@@ -22,6 +22,11 @@ export default function BunkerButton() {
     setIsLoading(true);
 
 
+    if (!contracts || !contracts.TST404) {
+      console.error('Contract not found');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const contractHandlers = (contracts as any).TST404('0x9CA8c793E5edFcE3732a3685a591e262E799530b');
