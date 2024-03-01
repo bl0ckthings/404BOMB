@@ -113,19 +113,19 @@ const Hero = () => {
       }, [remainingTime])
 
       useEffect(() => {
-        let tickingAudio;
+        let tickingAudio: HTMLAudioElement | null = null;
         if (typeof window !== "undefined") {
             tickingAudio = new Audio('/TickSound.mp3');
         }
 
         // Function to start playing ticking sound
         const playTickingSound = () => {
-            if (remainingTime !== '00:00:00' && remainingTime !== '') {
+            if (remainingTime !== '00:00:00' && remainingTime !== '' && tickingAudio) {
                 tickingAudio.play()
                     .catch(error => console.error("Audio play failed", error));
                 // Loop the ticking sound
                 tickingAudio.loop = true;
-            } else {
+            } else  if (tickingAudio){
                 // Stop the ticking sound when the timer reaches 00:00:00
                 tickingAudio.pause();
                 tickingAudio.currentTime = 0; // Rewind the sound
@@ -219,7 +219,7 @@ fontSize='30px'>
               color={'white'}
                fontFamily={'Ticking Bomb'}
                fontSize={'30px'} fontWeight={'bold'}>
-                <DefuseButton SetTimer={SetTimer}/>
+                <DefuseButton />
                </Box>
                
         </Box>

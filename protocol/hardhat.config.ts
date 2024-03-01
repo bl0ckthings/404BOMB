@@ -10,7 +10,7 @@ const config = {
     customChains: [
       {
         network: "blast_sepolia",
-        chainId: 168587773,
+        chainId: 5,
         urls: {
           apiURL: "https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan",
           browserURL: "https://testnet.blastscan.io"
