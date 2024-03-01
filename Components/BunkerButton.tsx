@@ -24,7 +24,8 @@ export default function BunkerButton() {
 
 
     try {
-      const txResponse = await contracts.TST404().enterBunker();
+      const contractHandlers = contracts.TST404();
+      const txResponse = await contractHandlers.enterBunker();
       
       if (txResponse && typeof txResponse[0] === 'string') {
         // Assuming the first element of txResponse is the transaction hash

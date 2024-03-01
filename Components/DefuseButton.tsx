@@ -29,7 +29,8 @@ export default function DefuseButton() {
     // }
 
     try {
-      const txResponse = await contracts.TST404().defuse();
+      const contractHandlers = contracts.TST404();
+      const txResponse = await contractHandlers.defuse();
       
       if (txResponse && typeof txResponse[0] === 'string') {
         // Assuming the first element of txResponse is the transaction hash
